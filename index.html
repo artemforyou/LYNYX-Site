@@ -13,16 +13,15 @@
             transition: color 0.3s, background-color 0.3s;
         }
 
-        /* Верхняя панель */
         header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 10px 20px;
             background: linear-gradient(90deg, #ff6600, #000);
+            flex-wrap: wrap;
         }
 
-        /* Вкладки */
         nav a {
             color: #ff9900;
             text-decoration: none;
@@ -39,7 +38,12 @@
             transform: scale(1.05);
         }
 
-        /* Блок кнопок справа */
+        .top-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
         .top-buttons button {
             background-color: #ff9900;
             border: none;
@@ -48,7 +52,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 10px;
+            margin: 5px 0;
             transition: all 0.3s ease;
         }
 
@@ -58,14 +62,21 @@
             transform: scale(1.05);
         }
 
+        .version-text {
+            font-size: 0.9rem;
+            color: rgba(200, 200, 200, 0.7);
+            margin-top: 5px;
+            text-align: right;
+        }
+
         main {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: calc(100vh - 60px);
+            min-height: calc(100vh - 60px);
             text-align: center;
-            padding: 0 20px;
+            padding: 20px;
             transition: opacity 0.5s;
         }
 
@@ -79,6 +90,26 @@
             max-width: 600px;
             line-height: 1.5;
             color: #ccc;
+        }
+
+        .free-item {
+            background-color: #222;
+            border: 1px solid #ff6600;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .free-item h3 {
+            color: #ff9900;
+            margin-bottom: 10px;
+        }
+
+        .free-item p {
+            color: #ccc;
+            font-size: 0.9rem;
         }
 
         footer {
@@ -95,10 +126,12 @@
         <nav>
             <a href="#" id="homeTab" class="active">ГЛАВНАЯ</a>
             <a href="#" id="infoTab">ИНФО</a>
+            <a href="#" id="freeTab">ХАЛЯВА</a>
         </nav>
         <div class="top-buttons">
             <button id="translateBtn">EN</button>
             <button id="telegramBtn">TELEGRAM</button>
+            <div class="version-text">V.0.13</div>
         </div>
     </header>
 
@@ -114,11 +147,11 @@
     <script>
         const homeTab = document.getElementById('homeTab');
         const infoTab = document.getElementById('infoTab');
+        const freeTab = document.getElementById('freeTab');
         const mainContent = document.getElementById('mainContent');
         const translateBtn = document.getElementById('translateBtn');
         const telegramBtn = document.getElementById('telegramBtn');
 
-        // Содержимое на двух языках
         const content = {
             ru: {
                 home: {
@@ -128,6 +161,14 @@
                 info: {
                     title: "О компании LYNYX",
                     text: "Мы — компания, которая упрощает жизнь в играх. Мы создаём туториалы, делимся кодами и советами, чтобы игроки могли получать максимум удовольствия. LYNYX помогает сделать игровой процесс проще и интереснее!"
+                },
+                free: {
+                    title: "ХАЛЯВА от LYNYX",
+                    text: "Здесь вы найдёте бесплатные бонусы, коды и полезные ресурсы для игр! Следите за обновлениями, чтобы ничего не пропустить.",
+                    item: {
+                        name: "BLACK RUSSIA PROMO",
+                        hashtag: "#GFBR"
+                    }
                 }
             },
             en: {
@@ -138,6 +179,14 @@
                 info: {
                     title: "About LYNYX",
                     text: "We are a company that makes life easier in games. We create tutorials, share codes, and provide tips so gamers can enjoy the experience to the fullest. LYNYX helps make gaming simpler and more fun!"
+                },
+                free: {
+                    title: "FREE Stuff from LYNYX",
+                    text: "Here you will find free bonuses, codes, and useful resources for games! Stay tuned so you don't miss anything.",
+                    item: {
+                        name: "BLACK RUSSIA PROMO",
+                        hashtag: "#GFBR"
+                    }
                 }
             }
         };
@@ -148,38 +197,56 @@
             const data = content[currentLang][tab];
             mainContent.style.opacity = 0;
             setTimeout(() => {
-                mainContent.innerHTML = `<h2>${data.title}</h2><p>${data.text}</p>`;
+                if (tab === 'free') {
+                    mainContent.innerHTML = `
+                        <h2>${data.title}</h2>
+                        <p>${data.text}</p>
+                        <div class="free-item">
+                            <h3>${data.item.name}</h3>
+                            <p>${data.item.hashtag}</p>
+                        </div>
+                    `;
+                } else {
+                    mainContent.innerHTML = `<h2>${data.title}</h2><p>${data.text}</p>`;
+                }
                 mainContent.style.opacity = 1;
             }, 200);
         }
 
+        function setActiveTab(activeTab) {
+            [homeTab, infoTab, freeTab].forEach(tab => tab.classList.remove('active'));
+            activeTab.classList.add('active');
+        }
+
         homeTab.addEventListener('click', (e) => {
             e.preventDefault();
-            homeTab.classList.add('active');
-            infoTab.classList.remove('active');
+            setActiveTab(homeTab);
             showContent('home');
         });
 
         infoTab.addEventListener('click', (e) => {
             e.preventDefault();
-            infoTab.classList.add('active');
-            homeTab.classList.remove('active');
+            setActiveTab(infoTab);
             showContent('info');
+        });
+
+        freeTab.addEventListener('click', (e) => {
+            e.preventDefault();
+            setActiveTab(freeTab);
+            showContent('free');
         });
 
         translateBtn.addEventListener('click', () => {
             currentLang = currentLang === 'ru' ? 'en' : 'ru';
             translateBtn.textContent = currentLang === 'ru' ? 'EN' : 'RU';
 
-            if (homeTab.classList.contains('active')) {
-                showContent('home');
-            } else {
-                showContent('info');
-            }
+            if (homeTab.classList.contains('active')) showContent('home');
+            else if (infoTab.classList.contains('active')) showContent('info');
+            else showContent('free');
 
-            // Обновляем текст вкладок
             homeTab.textContent = currentLang === 'ru' ? 'ГЛАВНАЯ' : 'HOME';
             infoTab.textContent = currentLang === 'ru' ? 'ИНФО' : 'INFO';
+            freeTab.textContent = currentLang === 'ru' ? 'ХАЛЯВА' : 'FREE';
         });
 
         telegramBtn.addEventListener('click', () => {
