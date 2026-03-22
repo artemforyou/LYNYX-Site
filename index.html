@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LYNYX</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        /* Верхняя панель */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #ff6600, #000);
+        }
+
+        /* Вкладки */
+        nav a {
+            color: #ff9900;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 1.1rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: #ff6600;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        /* Блок кнопок справа */
+        .top-buttons button {
+            background-color: #ff9900;
+            border: none;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .top-buttons button:hover {
+            background-color: #ff6600;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px);
+            text-align: center;
+            padding: 0 20px;
+            transition: opacity 0.5s;
+        }
+
+        main h2 {
+            font-size: 2rem;
+            color: #ff6600;
+            margin-bottom: 20px;
+        }
+
+        main p {
+            max-width: 600px;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #000;
+            color: #ff6600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" id="homeTab" class="active">ГЛАВНАЯ</a>
+            <a href="#" id="infoTab">ИНФО</a>
+        </nav>
+        <div class="top-buttons">
+            <button id="translateBtn">EN</button>
+            <button id="telegramBtn">TELEGRAM</button>
+        </div>
+    </header>
+
+    <main id="mainContent">
+        <h2>Добро пожаловать в LYNYX</h2>
+        <p>Мы готовим приложение! Следите за новостями и скоро вы сможете использовать все наши функции в удобном формате.</p>
+    </main>
+
+    <footer>
+        &copy; 2026 LYNYX. Все права защищены.
+    </footer>
+
+    <script>
+        const homeTab = document.getElementById('homeTab');
+        const infoTab = document.getElementById('infoTab');
+        const mainContent = document.getElementById('mainContent');
+        const translateBtn = document.getElementById('translateBtn');
+        const telegramBtn = document.getElementById('telegramBtn');
+
+        // Содержимое на двух языках
+        const content = {
+            ru: {
+                home: {
+                    title: "Добро пожаловать в LYNYX",
+                    text: "Мы готовим приложение! Следите за новостями и скоро вы сможете использовать все наши функции в удобном формате."
+                },
+                info: {
+                    title: "О компании LYNYX",
+                    text: "Мы — компания, которая упрощает жизнь в играх. Мы создаём туториалы, делимся кодами и советами, чтобы игроки могли получать максимум удовольствия. LYNYX помогает сделать игровой процесс проще и интереснее!"
+                }
+            },
+            en: {
+                home: {
+                    title: "Welcome to LYNYX",
+                    text: "We are preparing an app! Stay tuned and soon you will be able to use all our features in a convenient format."
+                },
+                info: {
+                    title: "About LYNYX",
+                    text: "We are a company that makes life easier in games. We create tutorials, share codes, and provide tips so gamers can enjoy the experience to the fullest. LYNYX helps make gaming simpler and more fun!"
+                }
+            }
+        };
+
+        let currentLang = 'ru';
+
+        function showContent(tab) {
+            const data = content[currentLang][tab];
+            mainContent.style.opacity = 0;
+            setTimeout(() => {
+                mainContent.innerHTML = `<h2>${data.title}</h2><p>${data.text}</p>`;
+                mainContent.style.opacity = 1;
+            }, 200);
+        }
+
+        homeTab.addEventListener('click', (e) => {
+            e.preventDefault();
+            homeTab.classList.add('active');
+            infoTab.classList.remove('active');
+            showContent('home');
+        });
+
+        infoTab.addEventListener('click', (e) => {
+            e.preventDefault();
+            infoTab.classList.add('active');
+            homeTab.classList.remove('active');
+            showContent('info');
+        });
+
+        translateBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            translateBtn.textContent = currentLang === 'ru' ? 'EN' : 'RU';
+
+            if (homeTab.classList.contains('active')) {
+                showContent('home');
+            } else {
+                showContent('info');
+            }
+
+            // Обновляем текст вкладок
+            homeTab.textContent = currentLang === 'ru' ? 'ГЛАВНАЯ' : 'HOME';
+            infoTab.textContent = currentLang === 'ru' ? 'ИНФО' : 'INFO';
+        });
+
+        telegramBtn.addEventListener('click', () => {
+            window.open('https://t.me/Lynyx_Global', '_blank');
+        });
+    </script>
+
+</body>
+</html>
